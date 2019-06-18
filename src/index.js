@@ -1,5 +1,5 @@
 
-import 'dotenv/config';
+// import 'dotenv/config';
 import cors from 'cors';
 import uuidv4 from 'uuid/v4';
 import express from 'express';
