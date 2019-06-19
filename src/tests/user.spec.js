@@ -10,6 +10,17 @@ describe('simple test', () => {
   });
 });
 
+describe('all needy people', () => {
+  it('returns the right number of needy people', async () => {
+    const numberPeople = 2
+
+    const result = await userApi.peopleInNeed()
+    console.log("result-->", result)
+    expect(result.data.length).toeql(numberPeople)
+  })
+
+})
+/*
 
 describe('users', () => {
   describe('user(id: String!): User', () => {
@@ -69,3 +80,4 @@ describe('users', () => {
   
 });
 
+*/

@@ -9,7 +9,7 @@ import jwt from 'jsonwebtoken';
 
 import schema from './schema'
 import resolvers from './resolvers'
-// import console = require('console');
+import models from './models'
 // import models, {sequelize } from './models'
 
 const app = express();
@@ -18,6 +18,9 @@ app.use(cors());
 const server = new ApolloServer( { 
   typeDefs: schema,
   resolvers,
+  context: {
+    models
+  }
 } )
 
 server.applyMiddleware({app, path: '/graphql' })

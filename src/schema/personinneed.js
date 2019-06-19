@@ -14,6 +14,7 @@ export default gql`
   extend type Query {
     peopleInNeed: [NeedyInfo]
     personInNeed( id: ID!): NeedyInfo
+    me: NeedyInfo
   }
 
   type EmergencyContact {
