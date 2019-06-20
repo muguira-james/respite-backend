@@ -1,0 +1,48 @@
+I need lunch so, I'm writing my status for you to see
+
+I started on a GraphQL + Postgres based backend.  I was not thinking clearly and this instance of code reflected this.  Last night I deleted it and started from scratch.
+
+I now have:
+GraphQL + MongoDB based backend.  I hope this does not bite me since MongoDB is not open source for business.  However, if this comes up, it is about a day to convert to another NoSQL open source db.  Plus, right now I can host this on Heroku (for free)
+
+I have the following data structures (at the database)
+
+Parent - holds info about a parent.  A parent can have many children
+Child - a Child can have 1 or more parents
+Host - a host can have many children staying with them at once.
+
+I have the following API
+
+getParents - produces a list of parents in the system
+getParent - gets a single parent (by id)
+createParent - creates 1 parent
+updateParent - update
+
+getChildren - list of all children 
+getChild - one child
+createChild - make one
+updateChild - update
+
+getHosts - get a list
+getHost - get a single host
+createHost - make one
+updateHost - change / update
+
+In testing right now...
+addChildToHost - shows that a child is staying with a Host
+removeChildFromHost - and delete the above relationship
+addParentToChild - link child and parent
+addChildToParent - link the other way
+
+Host child relationships are transient, meaning they only last for a short while.
+
+There is an admin API planned:
+deleteParent
+deleteChild
+deleteHost
+
+Future stuff:
+There is a (real-time through the app) chat feature planned
+There is also the idea of role and authentication (auth is only partial right now)
+
+JAM
