@@ -1,16 +1,39 @@
 
-// import 'dotenv/config';
+import 'dotenv/config';
 import cors from 'cors';
-import uuidv4 from 'uuid/v4';
+// import uuidv4 from 'uuid/v4';
 import express from 'express';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
+import mongoose from "mongoose";
 
-import jwt from 'jsonwebtoken';
 
-import schema from './schema'
-import resolvers from './resolvers'
-import models from './models'
-// import models, {sequelize } from './models'
+import { models } from "./dbconfig/";
+
+const { mongoURI: db } = process.env;
+
+
+
+import schema from './graphql/schema'
+import resolvers from './graphql/resolvers'
+
+
+
+
+const context = {
+  models
+};
+
+// Connect to MongoDB with Mongoose.
+mongoose
+  .connect(
+    db,
+    {
+      useCreateIndex: true,
+      useNewUrlParser: true
+    }
+  )
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log(err));
 
 const app = express();
 app.use(cors());
@@ -18,9 +41,7 @@ app.use(cors());
 const server = new ApolloServer( { 
   typeDefs: schema,
   resolvers,
-  context: {
-    models
-  }
+  context
 } )
 
 server.applyMiddleware({app, path: '/graphql' })
