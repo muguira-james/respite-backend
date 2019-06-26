@@ -12,16 +12,22 @@ export default gql`
   type Parent {
     id: ID
     name: String!
+    email: String!
     age: Int
     gender: String
     phoneNumber: String
     streetAddress: String
   }
 
-  extend type Mutation {
-    createParent(name: String, email: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Parent
-    updateParent(id: ID, name: String, email: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Parent
+  type Token {
+    token: String!
+  }
 
+  extend type Mutation {
+    createParent(name: String, email: String, password: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Parent
+    updateParentDetails(name: String, email: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Parent
+    updateParentPassword(name: String, email: String, password: String): Parent
+    signIn( name: String!, email: String!, password: String! ): Token
   }
 
 `;

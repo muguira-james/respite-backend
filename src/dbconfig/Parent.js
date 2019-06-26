@@ -10,7 +10,7 @@ ObjectID.prototype.valueOf = function() {
 
 const ParentSchema = new Schema({
   id: {
-    type: Number,
+    type: String,
     required: false
   },
   name: {
@@ -36,6 +36,14 @@ const ParentSchema = new Schema({
   },
   streetAddress: {
     type: String,
+    required: false
+  },
+  passwordHash: {
+    type: String,
+    required: false
+  },
+  role: {
+    type: String, 
     required: false
   }
 });

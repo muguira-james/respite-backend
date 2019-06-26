@@ -6,21 +6,16 @@ import express from 'express';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import mongoose from "mongoose";
 
-
 import { models } from "./dbconfig/";
 
 const { mongoURI: db } = process.env;
 
-
-
 import schema from './graphql/schema'
 import resolvers from './graphql/resolvers'
 
-
-
-
 const context = {
-  models
+  models,
+  secret: process.env.SECRET
 };
 
 // Connect to MongoDB with Mongoose.
@@ -47,6 +42,7 @@ const server = new ApolloServer( {
 server.applyMiddleware({app, path: '/graphql' })
 
 app.listen({port: 8000}, () => {
+  console.log("mongo is running: -->", db)
   console.log("server is listening on http://localhost:8000/graphql")
 })
 // const getMe = async req => {
