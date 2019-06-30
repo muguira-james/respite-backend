@@ -28,6 +28,7 @@ export default gql`
     updateParentDetails(name: String, email: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Parent
     updateParentPassword(name: String, email: String, password: String): Parent
     signIn( name: String!, email: String!, password: String! ): Token
+    echoToken(name: String, email: String, password: String) : Token
   }
 
 `;

@@ -36,7 +36,29 @@ app.use(cors());
 const server = new ApolloServer( { 
   typeDefs: schema,
   resolvers,
-  context
+  // context: async( { req } ) => {
+  //   const token = req.headers['x-token']
+  //   // console.log("header token-->", token)
+  //   if (token) {
+  //     try {
+  //       return await jwt.verify(token, process.env.SECRET)
+  //     } catch(err) {
+  //       throw new AuthenticationError("Your session has expired")
+  //     }
+  //   }
+
+  //   return {
+  //     models,
+  //     secret: process.env.SECRET
+  //   }
+  // }
+  context: async ( { req} ) => {
+    return {
+      models, 
+      secret: process.env.SECRET,
+      req
+    }
+  }
 } )
 
 server.applyMiddleware({app, path: '/graphql' })
