@@ -1,5 +1,6 @@
 
 import { gql } from 'apollo-server-express';
+import Child from './Child'
 
 export default gql`
 
@@ -17,6 +18,7 @@ export default gql`
     gender: String
     phoneNumber: String
     streetAddress: String
+    children: [ ID ]
   }
 
   type Token {
@@ -29,6 +31,7 @@ export default gql`
     updateParentPassword(name: String, email: String, password: String): Parent
     signIn( name: String!, email: String!, password: String! ): Token
     echoToken(name: String, email: String, password: String) : Token
+
   }
 
 `;

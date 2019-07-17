@@ -45,7 +45,8 @@ const ParentSchema = new Schema({
   role: {
     type: String, 
     required: false
-  }
+  },
+  children: [String]
 });
 
 export default mongoose.model("Parent", ParentSchema);

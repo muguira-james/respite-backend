@@ -23,7 +23,7 @@ export default gql`
   extend type Mutation {
     createChild(name: String, email: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Child
     addParentToChild(childId: String, parentId: String): Child
-    addChildToParent(childId: String, parentId: String): Parent
+    addChildToParent(childID: ID, parentID: ID): Parent
     
     updateChild(id: ID, name: String, email: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Child
 

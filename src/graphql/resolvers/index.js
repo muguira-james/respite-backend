@@ -3,6 +3,8 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
 import Parent from '../../dbconfig/Parent'
+import Child from '../../dbconfig/Child'
+
 import configParameters from '../../utils'
 
 
@@ -84,14 +86,38 @@ export default {
             return newParent
            
         },
-        // me: (parent, args, { models }) => {
-        //     return models[1]
-        // }
+        getChildren: async (root, args, context, info) => {
+            const children = await Child.find( {} )
+                .populate()
+                .exec()
+            
+                return children.map(u => ({
+                    id: u._id.toString(),
+                    name: u.name,
+                    age: u.age,
+                    gender: u.gender
+                }));
+        }
     },
     Mutation: {
+        createChild: async (root, { name, age, gender }, context, info) => {
+            console.log("createChild-->", name, age, gender)
+
+            const newChild = new Child({
+                name: name,
+                age: age,
+                gender: gender
+            })
+
+            return new Promise((resolve, reject) => {
+                newChild.save((err, res) => {
+                    err ? reject(err) : resolve(res);
+                });
+            });
+        },
         createParent: async (root, { name, email, password, age, gender, phoneNumber, streetAddress }, context, info) => {
             console.log("createParent-->", name, email, password, age)
-            const saltRounds = configParameters
+            const saltRounds = configParameters.numberOfSaltRounds
             let hash = await bcrypt.hash(password, saltRounds);
             console.log("pass hash-->", hash)
 
@@ -181,7 +207,7 @@ export default {
 
         echoToken: async (root, { name, email, password }, { models, secret, req }, info) => {
             let good_bad = await validateToken(req.headers['x-token'])
-            console.log("good_bad-->", good_bad)
+            // console.log("good_bad-->", good_bad)
             if ( good_bad === false) {
                 throw new AuthenticationError("Your session has expired")
             }
@@ -202,6 +228,41 @@ export default {
                     'name and email not found?'
                 )
             }
+        },
+
+        addChildToParent: async (root, { childID, parentID }, context, info) => {
+            const child = await Child.findOne({ _id: childID })
+                
+            if (!child) {
+                throw new AuthenticationError(
+                    'child info not found'
+                )
+            }
+
+            const parent = await Parent.findOne({_id: parentID })
+
+            if (!parent) {
+                throw new AuthenticationError(
+                    'Parent info not found'
+                )
+            }
+
+            if (parent.children.find(function(element) {
+                if (element === childID) {
+                    throw new AuthenticationError(
+                        `Parent already has this child ${childID}`
+                    )
+                }
+            }))
+            
+            console.log("adding child ", childID, " to parent-->", parentID)
+            parent.children.push(childID)
+
+            return new Promise((resolve, reject) => {
+                parent.save((err, res) => {
+                    err ? reject(err) : resolve(res);
+                });
+            });
         }
     }
 }
