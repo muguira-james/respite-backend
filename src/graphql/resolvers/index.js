@@ -61,7 +61,10 @@ export default {
                 age: u.age,
                 gender: u.gender,
                 phoneNumber: u.phoneNumber,
-                streetAddress: u.streetAddress
+                streetAddress: u.streetAddress,
+                children: u.children.map(c => {
+                    return c
+                })
             }));
         },
 
@@ -73,17 +76,19 @@ export default {
                     'parent info not found'
                 )
             }
-            const newParent = Parent( {
-                id: parent._id,
-                name: parent.name,
-                email: parent.email,
-                age: parent.age,
-                gender: parent.gender,
-                phoneNumber: parent.phoneNumber,
-                streetAddress: parent.streetAddress
-            })
+            // const newParent = Parent( {
+            //     id: parent._id,
+            //     name: parent.name,
+            //     email: parent.email,
+            //     age: parent.age,
+            //     gender: parent.gender,
+            //     phoneNumber: parent.phoneNumber,
+            //     streetAddress: parent.streetAddress
+            // })
 
-            return newParent
+            // return newParent
+
+            return parent
            
         },
         getChildren: async (root, args, context, info) => {
@@ -254,7 +259,7 @@ export default {
                     )
                 }
             }))
-            
+
             console.log("adding child ", childID, " to parent-->", parentID)
             parent.children.push(childID)
 
