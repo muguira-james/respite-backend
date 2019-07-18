@@ -134,6 +134,35 @@ export default {
             console.log("new child --->", newChild)
             return newChild
             // return child
+        },
+
+        getHost: async (root, { id }, context, info) => {
+            const host = await Host.findOne({ _id: id })
+                
+            if (!host) {
+                throw new AuthenticationError(
+                    'Host info not found'
+                )
+            }
+ 
+            return host
+        },
+
+        getHosts: async (root, args, context, info) => {
+            const hosts = await Hosts.find( {} ).populate().exec()
+
+            return hosts.map(u => ({
+                id: u._id.toString(),
+                name: u.name,
+                email: u.email,
+                age: u.age,
+                gender: u.gender,
+                phoneNumber: u.phoneNumber,
+                streetAddress: u.streetAddress,
+                managingChildren: u.managingChildren.map(c => {
+                    return c
+                })
+            }));
         }
     },
     Mutation: {
@@ -337,6 +366,84 @@ export default {
 
             return new Promise((resolve, reject) => {
                 child.save((err, res) => {
+                    err ? reject(err) : resolve(res);
+                });
+            });
+        },
+
+        createHost: async (root, { name, email, password, age, gender, phoneNumber, streetAddress }, context, info) => {
+            console.log("create host-->", name, email, password, age)
+            
+            // const saltRounds = configParameters.numberOfSaltRounds
+            // let hash = await bcrypt.hash(password, saltRounds);
+            // console.log("pass hash-->", hash)
+
+            const newHost =  new Host({
+                name: name,
+                email: email,
+                age: age,
+                gender: gender,
+                phoneNumber: phoneNumber,
+                streetAddress: streetAddress,
+                passwordHash: null,
+                managingChildren: []
+            });
+
+            console.log("new host-->", newHost)
+
+            return new Promise((resolve, reject) => {
+                newHost.save((err, res) => {
+                    err ? reject(err) : resolve(res);
+                });
+            });
+        },
+
+        addChildToHost: async (root, { childID, hostID }, context, info) => {
+            const child = await Child.findOne( { _id: childID } )
+
+            if (!child) {
+                throw new AuthenticationError(
+                    'child info not found'
+                )
+            }
+
+            console.log("found child-->", child)
+
+            const host = await Host.findOne( { _id: hostID } )
+
+            if (!host) {
+                throw new AuthenticationError(
+                    'host info not found'
+                )
+            }
+
+            console.log("found host-->", host)
+            
+            host.managingChildren.push(childID)
+            console.log(`added child ${childID} to host ${hostID}`)
+
+            return new Promise((resolve, reject) => {
+                host.save((err, res) => {
+                    err ? reject(err) : resolve(res);
+                });
+            });
+        },
+        removeChildFromHost: async (root, { childID, hostID }, context, info) => {
+            const host = await Host.findOne( { _id: hostID } )
+
+            if (!host) {
+                throw new AuthenticationError(
+                    'host info not found'
+                )
+            }
+
+            const newAry = host.managingChildren.filter( (value, index, ary) => {
+                return value !== childID
+            })
+
+            host.managingChildren.splice(0,0, newAry)
+            return new Promise((resolve, reject) => {
+                host.save((err, res) => {
                     err ? reject(err) : resolve(res);
                 });
             });

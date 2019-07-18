@@ -39,7 +39,8 @@ const HostSchema = new Schema({
   streetAddress: {
     type: String,
     required: false
-  }
+  },
+  managingChildren: [String]
 });
 
 export default mongoose.model("Host", HostSchema);
