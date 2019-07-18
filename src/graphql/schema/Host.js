@@ -20,7 +20,7 @@ export default gql`
     gender: String
     phoneNumber: String
     streetAddress: String
-    
+    manaingChildren: [ ID ]
   }
 
   extend type Mutation {

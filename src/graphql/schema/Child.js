@@ -7,7 +7,7 @@ export default gql`
   extend type Query {
     getChildren: [ Child ]
     getChild( id: ID!): Child
-    
+    getChildByParams (name: String!, age: Int!, gender: String!): Child
   }
 
   type Child {
@@ -21,11 +21,11 @@ export default gql`
   }
 
   extend type Mutation {
-    createChild(name: String, email: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Child
-    addParentToChild(childId: String, parentId: String): Child
+    createChild(name: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Child
+    addParentToChild(childID: ID, parentID: ID): Child
     addChildToParent(childID: ID, parentID: ID): Parent
     
-    updateChild(id: ID, name: String, email: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Child
+    updateChild(id: ID, name: String, age: Int, gender: String, phoneNumber: String, streetAddress: String): Child
 
   }
 

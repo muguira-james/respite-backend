@@ -102,6 +102,38 @@ export default {
                     age: u.age,
                     gender: u.gender
                 }));
+        },
+        getChild: async (root, { id }, context, info) => {
+            const child = await Child.findOne({ _id: id })
+                
+            if (!child) {
+                throw new AuthenticationError(
+                    'Child info not found'
+                )
+            }
+
+            return child           
+        },
+        getChildByParams: async (root, {name, age, gender}, context, info) => {
+            const child = await Child.findOne( { name: name, age: age, gender: gender})
+
+            if (!child) {
+                throw new AuthenticationError(
+                    `Child not found ${name}, ${age}, ${gender}`
+                )
+            } 
+            console.log("found your child-->", child)
+            const newChild = {
+                id : child._id.toString(),
+                name : child.name,
+                age : child.age,
+                gender : child.gender,
+                phoneNumber : child.phoneNumber,
+                streetAddress : child.streetAddress
+            }
+            console.log("new child --->", newChild)
+            return newChild
+            // return child
         }
     },
     Mutation: {
@@ -111,7 +143,10 @@ export default {
             const newChild = new Child({
                 name: name,
                 age: age,
-                gender: gender
+                gender: gender,
+                phoneNumber: "",
+                streetAddress: "",
+                parentOrGaurdian: []
             })
 
             return new Promise((resolve, reject) => {
@@ -133,7 +168,8 @@ export default {
                 gender: gender,
                 phoneNumber: phoneNumber,
                 streetAddress: streetAddress,
-                passwordHash: hash
+                passwordHash: hash,
+                children: []
             });
 
             console.log("new parent-->", newParent)
@@ -243,14 +279,15 @@ export default {
                     'child info not found'
                 )
             }
+            console.log("found child-->", child)
 
             const parent = await Parent.findOne({_id: parentID })
-
             if (!parent) {
                 throw new AuthenticationError(
                     'Parent info not found'
                 )
             }
+            console.log("found parent-->", parent)
 
             if (parent.children.find(function(element) {
                 if (element === childID) {
@@ -265,6 +302,41 @@ export default {
 
             return new Promise((resolve, reject) => {
                 parent.save((err, res) => {
+                    err ? reject(err) : resolve(res);
+                });
+            });
+        },
+        addParentToChild: async (root, { childID, parentID }, context, info) => {
+            const child = await Child.findOne( { _id: childID } )
+
+            if (!child) {
+                throw new AuthenticationError(
+                    'child info not found'
+                )
+            }
+
+            console.log("found child-->", child)
+
+            const parent = await Parent.findOne({_id: parentID })
+            if (!parent) {
+                throw new AuthenticationError(
+                    'Parent info not found'
+                )
+            }
+            console.log("found parent-->", parent)
+
+            if (child.parentOrGuardian.find(function(elm) {
+                if (elm === parentID) {
+                    throw new AuthenticationError(
+                        `Child already has this Parent ${parentID}`
+                    )
+                }
+            }))
+            console.log("adding child ", childID, " to parent-->", parentID)
+            child.parentOrGuardian.push(parentID)
+
+            return new Promise((resolve, reject) => {
+                child.save((err, res) => {
                     err ? reject(err) : resolve(res);
                 });
             });

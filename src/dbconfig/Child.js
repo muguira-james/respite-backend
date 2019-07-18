@@ -34,7 +34,8 @@ const ChildSchema = new Schema({
   streetAddress: {
     type: String,
     required: false
-  }
+  },
+  parentOrGuardian: [ String ]
 });
 
 export default mongoose.model("Child", ChildSchema);
