@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 
 import Parent from '../../dbconfig/Parent'
 import Child from '../../dbconfig/Child'
+import Host from '../../dbconfig/Host'
 
 import configParameters from '../../utils'
 
@@ -48,6 +49,7 @@ const createToken = async (name, email, secret) => {
 
 export default {
     Query: {
+
 
         getParents: async (root, args, context, info) => {
             const parent = await Parent.find({})
@@ -111,8 +113,14 @@ export default {
                     'Child info not found'
                 )
             }
-
-            return child           
+            const newChild = {
+                id: child._id.toString(),
+                name: child.name,
+                gender: child.gender,
+                age: child.age
+            }
+            console.log("a child-->", newChild)
+            return newChild           
         },
         getChildByParams: async (root, {name, age, gender}, context, info) => {
             const child = await Child.findOne( { name: name, age: age, gender: gender})
@@ -122,7 +130,7 @@ export default {
                     `Child not found ${name}, ${age}, ${gender}`
                 )
             } 
-            console.log("found your child-->", child)
+            
             const newChild = {
                 id : child._id.toString(),
                 name : child.name,
@@ -131,9 +139,28 @@ export default {
                 phoneNumber : child.phoneNumber,
                 streetAddress : child.streetAddress
             }
-            console.log("new child --->", newChild)
+            console.log("found your child (get child by params)-->", child)
             return newChild
-            // return child
+        },
+        getParentByParams: async (root, {name, age, gender}, context, info) => {
+            const parent = await Parent.findOne( { name: name, age: age, gender: gender})
+
+            if (!parent) {
+                throw new AuthenticationError(
+                    `Parent not found ${name}, ${age}, ${gender}`
+                )
+            } 
+            console.log("found your parent-->", parent)
+            const newParent = {
+                id : parent._id.toString(),
+                name : parent.name,
+                age : parent.age,
+                gender : parent.gender,
+                phoneNumber : parent.phoneNumber,
+                streetAddress : parent.streetAddress
+            }
+            console.log("new parent --->", newParent)
+            return newParent
         },
 
         getHost: async (root, { id }, context, info) => {
@@ -145,11 +172,19 @@ export default {
                 )
             }
  
-            return host
+            const newHost = {
+                name: host.name,
+                age: host.age,
+                email: host.email,
+                phoneNumber: host.phoneNumber,
+                streetAddress: host.streetAddress,
+                id: host._id.toString()
+            }
+            return newHost
         },
 
         getHosts: async (root, args, context, info) => {
-            const hosts = await Hosts.find( {} ).populate().exec()
+            const hosts = await Host.find( {} ).populate().exec()
 
             return hosts.map(u => ({
                 id: u._id.toString(),
@@ -163,7 +198,28 @@ export default {
                     return c
                 })
             }));
-        }
+        },
+        getHostByParams: async (root, {name, age, gender}, context, info) => {
+            const host = await Host.findOne( { name: name, age: age, gender: gender})
+
+            if (!host) {
+                throw new AuthenticationError(
+                    `Host not found ${name}, ${age}, ${gender}`
+                )
+            } 
+            // console.log("found your host by params-->", host)
+            const newHost = {
+                id : host._id.toString(),
+                name : host.name,
+                age : host.age,
+                email: host.email,
+                gender : host.gender,
+                phoneNumber : host.phoneNumber,
+                streetAddress : host.streetAddress
+            }
+            console.log("get hostByParams --->", newHost)
+            return newHost
+        },
     },
     Mutation: {
         createChild: async (root, { name, age, gender }, context, info) => {
@@ -308,7 +364,7 @@ export default {
                     'child info not found'
                 )
             }
-            console.log("found child-->", child)
+            // console.log("found child-->", child)
 
             const parent = await Parent.findOne({_id: parentID })
             if (!parent) {
@@ -316,7 +372,7 @@ export default {
                     'Parent info not found'
                 )
             }
-            console.log("found parent-->", parent)
+            // console.log("found parent-->", parent)
 
             if (parent.children.find(function(element) {
                 if (element === childID) {
@@ -326,7 +382,7 @@ export default {
                 }
             }))
 
-            console.log("adding child ", childID, " to parent-->", parentID)
+            // console.log("adding child ", childID, " to parent-->", parentID)
             parent.children.push(childID)
 
             return new Promise((resolve, reject) => {
@@ -344,7 +400,7 @@ export default {
                 )
             }
 
-            console.log("found child-->", child)
+            // console.log("found child-->", child)
 
             const parent = await Parent.findOne({_id: parentID })
             if (!parent) {
@@ -352,7 +408,7 @@ export default {
                     'Parent info not found'
                 )
             }
-            console.log("found parent-->", parent)
+            // console.log("found parent-->", parent)
 
             if (child.parentOrGuardian.find(function(elm) {
                 if (elm === parentID) {
@@ -361,7 +417,7 @@ export default {
                     )
                 }
             }))
-            console.log("adding child ", childID, " to parent-->", parentID)
+            // console.log("adding child ", childID, " to parent-->", parentID)
             child.parentOrGuardian.push(parentID)
 
             return new Promise((resolve, reject) => {
@@ -371,8 +427,8 @@ export default {
             });
         },
 
-        createHost: async (root, { name, email, password, age, gender, phoneNumber, streetAddress }, context, info) => {
-            console.log("create host-->", name, email, password, age)
+        createHost: async (root, { name, email, age, gender, phoneNumber, streetAddress }, context, info) => {
+            console.log("create host-->", name, email, age, gender, phoneNumber, streetAddress)
             
             // const saltRounds = configParameters.numberOfSaltRounds
             // let hash = await bcrypt.hash(password, saltRounds);
@@ -385,11 +441,9 @@ export default {
                 gender: gender,
                 phoneNumber: phoneNumber,
                 streetAddress: streetAddress,
-                passwordHash: null,
-                managingChildren: []
             });
 
-            console.log("new host-->", newHost)
+            // console.log("new host-->", newHost)
 
             return new Promise((resolve, reject) => {
                 newHost.save((err, res) => {
@@ -399,15 +453,16 @@ export default {
         },
 
         addChildToHost: async (root, { childID, hostID }, context, info) => {
+            console.log("addChildToHost: childID = ", childID, " hostID = ", hostID)
             const child = await Child.findOne( { _id: childID } )
 
             if (!child) {
                 throw new AuthenticationError(
-                    'child info not found'
+                    `child info not found ${childID}`
                 )
             }
 
-            console.log("found child-->", child)
+            console.log("found child (add child to host)-->", child)
 
             const host = await Host.findOne( { _id: hostID } )
 
@@ -417,9 +472,11 @@ export default {
                 )
             }
 
-            console.log("found host-->", host)
+            
             
             host.managingChildren.push(childID)
+            console.log("found host (add child to host)-->", host)
+
             console.log(`added child ${childID} to host ${hostID}`)
 
             return new Promise((resolve, reject) => {
@@ -429,6 +486,7 @@ export default {
             });
         },
         removeChildFromHost: async (root, { childID, hostID }, context, info) => {
+            console.log("removeChildFromHost--> childID = ", childID, " hostID->", hostID)
             const host = await Host.findOne( { _id: hostID } )
 
             if (!host) {
@@ -436,17 +494,20 @@ export default {
                     'host info not found'
                 )
             }
-
+            console.log("preping to remove child from host care-->", host)
             const newAry = host.managingChildren.filter( (value, index, ary) => {
-                return value !== childID
+                console.log("lp -->", value)
+                return value.toString() !== childID.toString()
             })
-
-            host.managingChildren.splice(0,0, newAry)
+            console.log("removeChildFromHost--> step 1 = ", host)
+            host.managingChildren =  newAry
+            console.log("removeChildFromHost--> step 2 = ", host)
             return new Promise((resolve, reject) => {
                 host.save((err, res) => {
                     err ? reject(err) : resolve(res);
                 });
             });
-        }
+        },
+        
     }
 }

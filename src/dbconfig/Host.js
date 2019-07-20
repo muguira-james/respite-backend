@@ -22,7 +22,7 @@ const HostSchema = new Schema({
   email: {
     type: String,
     unique: true,
-    required: true
+    required: false
   },
   age: {
     type: Number,

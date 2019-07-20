@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  mongodb:
+    image: mongojam
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root 
+      - MONGO_INITDB_ROOT_PASSWORD=mysql
+    ports:
+      - 27017:27017
+    volumes:
+      - DBTestStorage:/data
+    command: mongod
+
+volumes:
+  DBTestStorage:

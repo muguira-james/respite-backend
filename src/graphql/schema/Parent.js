@@ -7,7 +7,7 @@ export default gql`
   extend type Query {
     getParents: [Parent]
     getParent( id: ID!): Parent
-    
+    getParentByParams (name: String!, age: Int!, gender: String!): Parent
   }
 
   type Parent {
