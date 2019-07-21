@@ -18,6 +18,8 @@ const context = {
   secret: process.env.SECRET
 };
 
+console.log("mongodb info-->db-->", db)
+console.log("secret -->", context)
 // Connect to MongoDB with Mongoose.
 mongoose
   .connect(
@@ -30,7 +32,7 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 
-console.log("mongodb info-->db-->", db)
+
 const app = express();
 app.use(cors());
 
