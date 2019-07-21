@@ -20,6 +20,7 @@ const context = {
 
 console.log("mongodb info-->db-->", db)
 console.log("secret -->", context)
+console.log("PORT->", process.env.PORT)
 // Connect to MongoDB with Mongoose.
 mongoose
   .connect(
