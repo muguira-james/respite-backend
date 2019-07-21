@@ -100,7 +100,7 @@ describe("setuptest making and retrieving hosts and children", () => {
 
   it("removes child from host", async () => {
     const id_obj = { childID: child_id, hostID: host_id }
-    console.log("child_id = ", id_obj)
+    // console.log("child_id = ", id_obj)
 
     const result = await userAPI.removeChildFromHost(id_obj)
     // console.log("m c -->", Object.values(result.data)[0].removeChildFromHost)

@@ -30,6 +30,7 @@ mongoose
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 
+console.log("mongodb info-->db-->", db)
 const app = express();
 app.use(cors());
 
@@ -62,10 +63,10 @@ const server = new ApolloServer( {
 } )
 
 server.applyMiddleware({app, path: '/graphql' })
-
-app.listen({port: 8000}, () => {
+let myPort = process.env.PORT
+app.listen({port: myPort}, () => {
   console.log("mongo is running: -->", db)
-  console.log("server is listening on http://localhost:8000/graphql")
+  console.log(`server is listening on http://localhost:${myPort}/graphql`)
 })
 // const getMe = async req => {
 //   const token = req.headers['x-token'];
