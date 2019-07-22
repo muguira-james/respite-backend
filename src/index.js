@@ -5,7 +5,7 @@ import cors from 'cors';
 import express from 'express';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import mongoose from "mongoose";
-
+ 
 import { models } from "./dbconfig/";
 
 const { mongoURI: db } = process.env;
@@ -18,9 +18,9 @@ const context = {
   secret: process.env.SECRET
 };
 
-console.log("mongodb info-->db-->", db)
-console.log("secret -->", context)
-console.log("PORT->", process.env.PORT)
+console.log("heroku process.env", process.env)
+// console.log("secret -->", context)
+// console.log("PORT->", process.env.PORT)
 // Connect to MongoDB with Mongoose.
 mongoose
   .connect(
