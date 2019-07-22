@@ -21,7 +21,7 @@ const context = {
 const driverPart = process.env.driverUserPassHost
 const restPart = process.env.restPart
 const portPart = process.env.PORT
-const db = process.env.driverUserPassHost + process.env.PORT + process.env.restPart
+const db = process.env.driverUserPassHost + ":" + process.env.PORT + process.env.restPart
 // const { mongoURI: db } 
 console.log("db", db)
 // console.log("secret -->", context)
