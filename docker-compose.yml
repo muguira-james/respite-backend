@@ -2,7 +2,10 @@ version: '3'
 
 services:
   mongodb:
-    image: mongojam
+    image: muguirajames/mongojam
+    build:
+      context: .
+      dockerfile: Dockerfile-mongo
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root 
       - MONGO_INITDB_ROOT_PASSWORD=mysql
@@ -11,6 +14,22 @@ services:
     volumes:
       - DBTestStorage:/data
     command: mongod
+    networks:
+      - respite-net
+
+  backend:
+    image: muguirajames/backend
+    build:
+      context: .
+      dockerfile: Dockerfile-backend
+    ports:
+      - 8000:8000
+    networks:
+      - respite-net
+    entrypoint: ./wait-for-it.sh respite-net:27017  -- yarn start
+
 
 volumes:
   DBTestStorage:
+networks:
+  respite-net:
