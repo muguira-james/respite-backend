@@ -21,7 +21,7 @@ console.log("heroku process.env", process.env)
 const driverPart = process.env.driverUserPassHost
 const restPart = process.env.restPart
 const portPart = process.env.PORT
-const { mongoURI: db } = `${driverUserPassHost}${portPart}${restPart}`
+const { mongoURI: db } = `${driverPart}${portPart}${restPart}`
 
 // console.log("secret -->", context)
 // console.log("PORT->", process.env.PORT)
