@@ -8,7 +8,10 @@ import mongoose from "mongoose";
  
 import { models } from "./dbconfig/";
 
-const { mongoURI: db } = process.env;
+const driverPart = process.env.driverUserPassHost
+const restPart = process.env.restPart
+const portPart = process.env.PORT
+const { mongoURI: db } = `${driverUserPassHost}${portPart}${restPart}`
 
 import schema from './graphql/schema'
 import resolvers from './graphql/resolvers'
