@@ -69,9 +69,10 @@ const server = new ApolloServer( {
 
 server.applyMiddleware({app, path: '/graphql' })
 let myPort = process.env.PORT
+console.log("supplied PORT = ", myPort)
 app.listen({port: myPort}, () => {
   console.log("mongo is running: -->", db)
-  console.log(`server is listening on http://localhost:${myPort}/graphql`)
+  // console.log(`server is listening on http://localhost:${myPort}/graphql`)
 })
 // const getMe = async req => {
 //   const token = req.headers['x-token'];
