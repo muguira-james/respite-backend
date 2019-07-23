@@ -18,14 +18,18 @@ const context = {
 
 // console.log("heroku process.env", process.env)
 
-const driverPart = process.env.driverUserPassHost
-const restPart = process.env.restPart
-const portPart = process.env.PORT
-const db = process.env.driverUserPassHost + ":" + process.env.PORT + process.env.restPart
-// const { mongoURI: db } 
+// const driverPart = process.env.driverUserPassHost
+// const restPart = process.env.restPart
+// const portPart = process.env.PORT
+// const db = process.env.driverUserPassHost + ":" + process.env.PORT + process.env.restPart
+
+//
+// This will decluster the db from the mongURI parameter in the process.env
+const { mongoURI: db } = process.env
 console.log("db", db)
 // console.log("secret -->", context)
 // console.log("PORT->", process.env.PORT)
+
 // Connect to MongoDB with Mongoose.
 mongoose
   .connect(
