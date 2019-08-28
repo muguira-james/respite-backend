@@ -4,10 +4,9 @@ Graphql back end
 This is a starting point for the backend.  It is based graphql (vs REST).
 
 to use it:
-0.  you must have mongoDB installed (or access to one)
-1.  you must have nodejs installed (version > 8)
-2.  npm install (or yarn install)
-3.  npm start
+* 0. create a '.env' file from the file env_template. Add passwords for mongodb
+* 1. use the same password from step 0 in the file 'create_user.js'
+* 2. docker-compose up
 
 If all is well, you will see a couple of messages and the sever will tell you were to point your browser to test.
 
